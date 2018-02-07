@@ -15,14 +15,30 @@ dados = [porco1, porco2, porco3, cao1, cao2, cao3]
 # 1 = porco / -1 = cao
 marcacoes = [1, 1, 1, -1, -1, -1]
 
+# animais que nao conhecemos, mas sabemos as caracteristicas
 misterioso1 = [1, 1, 1]
 misterioso2 = [1, 0, 0]
+misterioso3 = [0, 0, 1]
 
-teste = [misterioso1, misterioso2]  # elementos que serao testados
+testes = [misterioso1, misterioso2, misterioso3]  # elementos que serao testados
+marcacoes_teste = [-1, 1, -1]  # garantia de teste, resultado esperado
 
 from sklearn.naive_bayes import MultinomialNB
 
 modelo = MultinomialNB()  # cria um modelo
 modelo.fit(dados, marcacoes)  # adequa o modelo as marcacoes
 
-print(modelo.predict(teste))  # preve qual o elemento
+resultado = modelo.predict(testes)  # preve qual o elemento
+print(resultado)
+
+# verifica as diferencas
+diferencas = resultado - marcacoes_teste  # se for diferente de 0 entao errou
+print(diferencas)
+
+# verifica os acertos
+acertos = [d for d in diferencas if d==0]  # retorna um array
+
+total_elementos = len(testes)  # total de elementos
+total_acertos = len(acertos)  # total de acertos
+
+print(100.0*(total_acertos/total_elementos))
