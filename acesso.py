@@ -17,3 +17,20 @@ def carregar_acessos():
         Y.append(int(comprou))
 
     return X, Y
+
+
+def carregar_buscas():
+    X = []
+    Y = []
+
+    arquivo = open('dist/busca2.csv', 'r')
+    leitor = csv.reader(arquivo)
+    next(leitor)
+
+    for home, busca, logado, comprou in leitor:
+        dado = [int(home), busca, int(logado)]
+
+        X.append(dado)
+        Y.append(int(comprou))
+
+    return X, Y
