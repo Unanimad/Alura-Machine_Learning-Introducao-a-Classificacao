@@ -1,3 +1,4 @@
+from collections import Counter
 import pandas as pd # pd = python data or 'pandas'
 
 # df = data frame
@@ -6,16 +7,14 @@ X_df = df[['home', 'busca', 'logado']]  # sendo mais de uma, necessario estar nu
 Y_df = df['comprou']
 
 Xdummies_df = pd.get_dummies(X_df)  # separa as strings transformando em colunas
-Ydummies_df = pd.get_dummies(Y_df)['sim']  # separa as strings transformando em colunas
+Ydummies_df = Y_df
 
 X = Xdummies_df.values  # transforma de dataframe (df) em array
 Y = Ydummies_df.values
 
 # Chutar a base entre elementos com 1 ou 0
-acerto_um = sum(Y)  # soma os elementos com 1
-acerto_zero = len(Y) - acerto_um  # retira os elementos 1 do total de elementos
-
-taxa_acerto_base = max(acerto_um, acerto_zero) / len(Y) * 100.0
+acerto_base = max(Counter(Y).values())  # retorna o elemento com mais recorrente
+taxa_acerto_base = acerto_base / len(Y) * 100.0
 
 print("Taxa de acerto base: %f" % taxa_acerto_base)
 
@@ -37,11 +36,10 @@ modelo = MultinomialNB()
 modelo.fit(treino_dados, treino_marcacoes)
 
 resultado = modelo.predict(teste_dados)
-diferencas = resultado - teste_marcacoes
 
-acertos = [d for d in diferencas if d==0]
+acertos = (resultado == teste_marcacoes)
 
-total_acertos = len(acertos)
+total_acertos = sum(acertos)
 total_elementos = len(teste_dados)
 taxa_acerto = 100.0 * total_acertos / total_elementos
 
