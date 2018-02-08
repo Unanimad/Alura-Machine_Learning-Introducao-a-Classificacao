@@ -12,12 +12,6 @@ Ydummies_df = Y_df
 X = Xdummies_df.values  # transforma de dataframe (df) em array
 Y = Ydummies_df.values
 
-# Chutar a base entre elementos com 1 ou 0
-acerto_base = max(Counter(Y).values())  # retorna o elemento com mais recorrente
-taxa_acerto_base = acerto_base / len(Y) * 100.0
-
-print("Taxa de acerto base: %f" % taxa_acerto_base)
-
 porcentagem_treino = 0.9  # definicao da porcentagem que sera para treino
 
 tamanho_treino = int(porcentagem_treino * len(X))  # define os que serao treinados
@@ -39,9 +33,14 @@ resultado = modelo.predict(teste_dados)
 
 acertos = (resultado == teste_marcacoes)
 
-total_acertos = sum(acertos)
+total_acertos = sum(acertos)  # soma todos os elementos
 total_elementos = len(teste_dados)
 taxa_acerto = 100.0 * total_acertos / total_elementos
 
 print("Taxa de acerto do algoritmo: %f" % taxa_acerto)
-print(total_elementos)
+
+# Chutar com o elemento mais recorrente
+acerto_base = max(Counter(teste_marcacoes).values())  # retorna o elemento com mais recorrente
+taxa_acerto_base = acerto_base / len(teste_marcacoes) * 100.0
+
+print("Taxa de acerto base: %f" % taxa_acerto_base)
