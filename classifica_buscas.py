@@ -11,6 +11,14 @@ Ydummies_df = pd.get_dummies(Y_df)['sim']  # separa as strings transformando em 
 X = Xdummies_df.values  # transforma de dataframe (df) em array
 Y = Ydummies_df.values
 
+# Chutar a base entre elementos com 1 ou 0
+acerto_um = sum(Y)  # soma os elementos com 1
+acerto_zero = len(Y) - acerto_um  # retira os elementos 1 do total de elementos
+
+taxa_acerto_base = max(acerto_um, acerto_zero) / len(Y) * 100.0
+
+print("Taxa de acerto base: %f" % taxa_acerto_base)
+
 porcentagem_treino = 0.9  # definicao da porcentagem que sera para treino
 
 tamanho_treino = int(porcentagem_treino * len(X))  # define os que serao treinados
@@ -37,5 +45,5 @@ total_acertos = len(acertos)
 total_elementos = len(teste_dados)
 taxa_acerto = 100.0 * total_acertos / total_elementos
 
-print(taxa_acerto)
+print("Taxa de acerto do algoritmo: %f" % taxa_acerto)
 print(total_elementos)
