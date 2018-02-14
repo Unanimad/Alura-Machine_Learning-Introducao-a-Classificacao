@@ -16,7 +16,7 @@ def fit_and_predict(nome, modelo, treino_dados, treino_marcacoes, teste_dados, t
     print("Taxa de acerto do {0}: {1}".format(nome, taxa_acerto))
 
 # df = data frame
-df = pd.read_csv('dist/busca2.csv')
+df = pd.read_csv('dist/busca.csv')
 X_df = df[['home', 'busca', 'logado']]  # sendo mais de uma, necessario estar num array
 Y_df = df['comprou']
 
@@ -26,16 +26,23 @@ Ydummies_df = Y_df
 X = Xdummies_df.values  # transforma de dataframe (df) em array
 Y = Ydummies_df.values
 
-porcentagem_treino = 0.9  # definicao da porcentagem que sera para treino
+porcentagem_treino = 0.8  # definicao da porcentagem de treino
+porcentagem_teste = 0.1  # definicao da porcentagem de teste
 
 tamanho_treino = int(porcentagem_treino * len(X))  # define os que serao treinados
-tamanho_teste = len(Y) - tamanho_treino  # define os que serao testados
+tamanho_teste = int(porcentagem_teste * len(Y))  # define os que serao testados
+tamanho_validacao = len(Y) - tamanho_treino - tamanho_teste  # define os que serao para validacao
 
-treino_dados = X[:tamanho_treino]  # pega os dados para treino
-treino_marcacoes = Y[:tamanho_treino]  # pega as marcacoes para treino
+fim_treino = tamanho_treino + tamanho_teste
+treino_dados = X[0:tamanho_treino]  # pega os dados para treino
+treino_marcacoes = Y[0:tamanho_treino]  # pega as marcacoes para treino
 
-teste_dados = X[-tamanho_teste:]  # pega os dados para teste
-teste_marcacoes = Y[-tamanho_teste:]  # pega as marcacoes para teste
+fim_teste = tamanho_treino + tamanho_teste
+teste_dados = X[tamanho_treino:fim_teste]  # pega os dados para teste
+teste_marcacoes = Y[tamanho_treino:fim_teste]  # pega as marcacoes para teste
+
+validacao_dados = X[fim_teste:]
+validacao_marcacoes = Y[fim_teste:]
 
 
 from sklearn.naive_bayes import MultinomialNB
