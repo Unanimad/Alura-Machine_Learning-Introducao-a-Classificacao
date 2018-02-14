@@ -13,10 +13,11 @@ def fit_and_predict(nome, modelo, treino_dados, treino_marcacoes, teste_dados, t
     total_elementos = len(teste_dados)
     taxa_acerto = 100.0 * total_acertos / total_elementos
 
-    print("Taxa de acerto do {0}: {1}".format(nome, taxa_acerto))
+    print('Taxa de acerto do {0}: {1}'.format(nome, taxa_acerto))
+    return taxa_acerto
 
 # df = data frame
-df = pd.read_csv('dist/busca.csv')
+df = pd.read_csv('dist/busca2.csv')
 X_df = df[['home', 'busca', 'logado']]  # sendo mais de uma, necessario estar num array
 Y_df = df['comprou']
 
@@ -48,17 +49,33 @@ validacao_marcacoes = Y[fim_teste:]
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import AdaBoostClassifier
 
-modelo = MultinomialNB()
-fit_and_predict('MultinomialNB', modelo, treino_dados, treino_marcacoes,
-    teste_dados, teste_marcacoes)
+modeloMultinomial = MultinomialNB()
+resultadoMultinomial = fit_and_predict('MultinomialNB', modeloMultinomial,
+    treino_dados, treino_marcacoes, teste_dados, teste_marcacoes)
 
-modelo = AdaBoostClassifier()
-fit_and_predict('AdaBoostClassifier', modelo, treino_dados, treino_marcacoes,
-    teste_dados, teste_marcacoes)
+modeloAdaBoost = AdaBoostClassifier()
+resultadoAdaBoost = fit_and_predict('AdaBoostClassifier', modeloAdaBoost,
+    treino_dados, treino_marcacoes, teste_dados, teste_marcacoes)
+
+# define qual o melhor algoritmo
+if resultadoMultinomial > resultadoAdaBoost:
+    vencedor = modeloMultinomial
+else:
+    vencedor = modeloAdaBoost
+
+resultado = vencedor.predict(validacao_dados)  # preve
+
+acertos = (resultado == validacao_marcacoes)
+
+total_acertos = sum(acertos)  # soma todos os elementos
+total_elementos = len(validacao_marcacoes)
+taxa_acerto = 100.0 * total_acertos / total_elementos
+
+print('Taxa de acerto entre os dois algoritmos no mundo real: {0}'"'.format(taxa_acerto))
 
 # Chutar com o elemento mais recorrente
-acerto_base = max(Counter(teste_marcacoes).values())  # retorna o elemento com mais recorrente
-taxa_acerto_base = acerto_base / len(teste_marcacoes) * 100.0
+acerto_base = max(Counter(validacao_marcacoes).values())  # retorna o elemento com mais recorrente
+taxa_acerto_base = acerto_base / len(validacao_marcacoes) * 100.0
 
 print('Taxa de acerto base: %f' % taxa_acerto_base)
-print('Total de testes: %d' % tamanho_teste)
+print('Total de testes: %d' % len(validacao_dados))
